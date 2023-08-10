@@ -44,8 +44,6 @@ contract FoodOrder {
     }
 
     function sendOrder(string memory foodMenu, uint256 quantity) public {
-        //require(customer == msg.sender, "Only the customers can call this function");
-
         orderseq++;
 
         // we passed the needed members of the struct as params so we can call them
@@ -77,7 +75,6 @@ contract FoodOrder {
         if (!orders[ID].created) {
             revert FoodOrder__ThisSpecficOrderDoesNotExist();
         }
-        //require(orders[ID].created, "The order does not exist ab initio");
 
         return (
             _customer,
@@ -92,11 +89,9 @@ contract FoodOrder {
         if (owner != msg.sender) {
             revert FoodOrder__OnlyTheOwnerCanDoThis();
         }
-        // require(owner == msg.sender, "Only the owner can do this, bruh");
         if (!orders[orderNo].created) {
             revert FoodOrder__ThisSpecficOrderDoesNotExist();
         }
-        //require(orders[orderNo].created, "The specific order does not exist");
 
         orders[orderNo].price = price;
         emit PriceOfOrder(orderNo, price);
@@ -108,18 +103,15 @@ contract FoodOrder {
         if (!orders[orderNo].created) {
             revert FoodOrder__NoOrderExistToGetThePrice();
         }
-        //require(orders[orderNo].created, "No order exist to get the price");
         uint256 priceOfFood = orders[orderNo].price;
         return priceOfFood;
     }
 
     /// @param orderNo the number tagged to the according to the order made in the contract
     function sendSafepayment(uint orderNo) public payable {
-        //require(customer == msg.sender, "Only customers call this");
         if (!orders[orderNo].created) {
             revert FoodOrder__ThisSpecficOrderDoesNotExist();
         }
-        //require(orders[orderNo].created, "The specific order does not exist");
 
         orders[orderNo].safePayment = msg.value;
         s_customers.push(msg.sender);
@@ -132,11 +124,9 @@ contract FoodOrder {
         if (owner != msg.sender) {
             revert FoodOrder__OnlyTheOwnerCanDoThis();
         }
-        //require(owner == msg.sender, "only the owner can do this, bruh");
         if (!orders[orderNo].created) {
             revert FoodOrder__ThisSpecficOrderDoesNotExist();
         }
-        //require(orders[orderNo].created, "The specific order does not exist");
 
         invoiceseq++;
 
@@ -149,14 +139,9 @@ contract FoodOrder {
     /// @param invoiceID the invoice identification
     /// @param deliveryDate date of delivery
     function markOrderDelivered(uint invoiceID, uint deliveryDate) public {
-        // require(
-        //     customer == msg.sender,
-        //     "Only customers can mark orders as delivered"
-        // );
         if (!invoices[invoiceID].created) {
             revert FoodOrder__TheInvoiceDoesntExist();
         }
-        //require(invoices[invoiceID].created, "The invoice doesn't exist");
 
         Invoice storage _invoice = invoices[invoiceID];
         Order storage _order = orders[_invoice.orderNo];
